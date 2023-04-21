@@ -1,20 +1,30 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react';
+import { useState, useEffect } from 'react';
+import { Context } from './context/Context';
+import  List  from './components/List.jsx';
+import  Reducer  from './components/Reducer.jsx';
+import { useFetch } from './components/useFetch';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const { data: posts, loading, error } = useFetch('https://jsonplaceholder.typicode.com/posts');
+
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Se ha producido un error: {console.error()}</div>;
+  }
 
   return (
-    <div className="App">
-      <h1>Segundo Parcial</h1>
-      <h1>Lista:</h1>
-      <div className="card">
-        
+    <Context reducer={Reducer} initialState={[]}>
+      <h1>Lista Posts</h1>
+      <div className="App">
+        <List posts={posts} />
       </div>
-    </div>
-  )
+    </Context>
+  );
 }
 
-export default App
+export default App;
